@@ -1,10 +1,10 @@
 package cn.windery.sentinel.sentinel;
 
-import cn.windery.learning.base.sentinel.slots.Rule;
-import cn.windery.learning.base.sentinel.slots.degrade.circuitbreak.CircuitBreakerManager;
-import cn.windery.learning.base.sentinel.slots.flow.FlowRaterManager;
-import cn.windery.learning.base.sentinel.slots.flow.RuleManager;
-import cn.windery.learning.base.sentinel.util.AssertUtil;
+import cn.windery.sentinel.sentinel.slots.Rule;
+import cn.windery.sentinel.sentinel.slots.degrade.circuitbreak.CircuitBreakerManager;
+import cn.windery.sentinel.sentinel.slots.flow.FlowRaterManager;
+import cn.windery.sentinel.sentinel.slots.flow.RuleManager;
+import cn.windery.sentinel.sentinel.util.AssertUtil;
 
 import java.util.HashMap;
 import java.util.List;

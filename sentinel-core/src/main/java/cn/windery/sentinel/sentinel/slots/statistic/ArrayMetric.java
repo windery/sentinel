@@ -1,6 +1,6 @@
 package cn.windery.sentinel.sentinel.slots.statistic;
 
-import cn.windery.learning.base.sentinel.WindowWrap;
+import cn.windery.sentinel.sentinel.WindowWrap;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package cn.windery.sentinel.sentinel.slots.statistic;
 
-import cn.windery.learning.base.sentinel.WindowWrap;
-import cn.windery.learning.base.sentinel.util.AssertUtil;
+import cn.windery.sentinel.sentinel.WindowWrap;
+import cn.windery.sentinel.sentinel.util.AssertUtil;
 
 import java.util.ArrayList;
 import java.util.List;

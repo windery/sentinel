@@ -1,12 +1,14 @@
 package cn.windery.sentinel.sentinel.log;
 
-import cn.windery.learning.base.sentinel.Context;
-import cn.windery.learning.base.sentinel.slots.AbstractLinkedProcessSlot;
-import cn.windery.learning.base.sentinel.slots.StatisticNode;
-import lombok.extern.slf4j.Slf4j;
+import cn.windery.sentinel.sentinel.Context;
+import cn.windery.sentinel.sentinel.slots.AbstractLinkedProcessSlot;
+import cn.windery.sentinel.sentinel.slots.StatisticNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class LogSlot extends AbstractLinkedProcessSlot<StatisticNode> {
+
+    private static final Logger log = LoggerFactory.getLogger(LogSlot.class);
 
 
     @Override

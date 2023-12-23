@@ -1,7 +1,7 @@
 package cn.windery.sentinel.sentinel.slots.flow;
 
-import cn.windery.learning.base.sentinel.RuleType;
-import cn.windery.learning.base.sentinel.slots.AbstractRule;
+import cn.windery.sentinel.sentinel.RuleType;
+import cn.windery.sentinel.sentinel.slots.AbstractRule;
 
 /**
  * 限流规则

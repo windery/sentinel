@@ -1,9 +1,9 @@
 package cn.windery.sentinel.sentinel.slots.nodeselect;
 
-import cn.windery.learning.base.sentinel.Context;
-import cn.windery.learning.base.sentinel.slots.AbstractLinkedProcessSlot;
-import cn.windery.learning.base.sentinel.slots.StatisticNode;
-import cn.windery.learning.base.sentinel.util.AssertUtil;
+import cn.windery.sentinel.sentinel.Context;
+import cn.windery.sentinel.sentinel.slots.AbstractLinkedProcessSlot;
+import cn.windery.sentinel.sentinel.slots.StatisticNode;
+import cn.windery.sentinel.sentinel.util.AssertUtil;
 
 import java.util.HashMap;
 import java.util.Map;

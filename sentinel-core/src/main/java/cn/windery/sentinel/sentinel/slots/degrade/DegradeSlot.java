@@ -6,7 +6,7 @@ import cn.windery.sentinel.sentinel.slots.AbstractLinkedProcessSlot;
 import cn.windery.sentinel.sentinel.slots.StatisticNode;
 import cn.windery.sentinel.sentinel.slots.degrade.circuitbreak.CircuitBreaker;
 import cn.windery.sentinel.sentinel.slots.degrade.circuitbreak.CircuitBreakerManager;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 

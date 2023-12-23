@@ -1,7 +1,7 @@
 package cn.windery.sentinel.sentinel;
 
-import cn.windery.learning.base.sentinel.exception.BlockException;
-import cn.windery.learning.base.sentinel.slots.StatisticNode;
+import cn.windery.sentinel.sentinel.exception.BlockException;
+import cn.windery.sentinel.sentinel.slots.StatisticNode;
 
 public class Context {
 

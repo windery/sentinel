@@ -1,8 +1,8 @@
 package cn.windery.sentinel.sentinel;
 
-import cn.windery.learning.base.sentinel.slots.ProcessorSlotChain;
-import cn.windery.learning.base.sentinel.slots.SlotChainBuilder;
-import cn.windery.learning.base.sentinel.util.AssertUtil;
+import cn.windery.sentinel.sentinel.slots.ProcessorSlotChain;
+import cn.windery.sentinel.sentinel.slots.SlotChainBuilder;
+import cn.windery.sentinel.sentinel.util.AssertUtil;
 
 import java.util.HashMap;
 import java.util.Map;

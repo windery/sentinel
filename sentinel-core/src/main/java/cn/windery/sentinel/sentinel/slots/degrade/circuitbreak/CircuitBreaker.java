@@ -1,7 +1,7 @@
 package cn.windery.sentinel.sentinel.slots.degrade.circuitbreak;
 
-import cn.windery.learning.base.sentinel.Context;
-import cn.windery.learning.base.sentinel.slots.degrade.DegradeRule;
+import cn.windery.sentinel.sentinel.Context;
+import cn.windery.sentinel.sentinel.slots.degrade.DegradeRule;
 
 public interface CircuitBreaker {
 

@@ -1,6 +1,6 @@
 package cn.windery.sentinel.sentinel.slots.flow;
 
-import cn.windery.learning.base.sentinel.slots.RuleLoader;
+import cn.windery.sentinel.sentinel.slots.RuleLoader;
 
 public interface FlowRuleLoader extends RuleLoader<FlowRule> {
 

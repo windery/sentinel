@@ -1,6 +1,6 @@
 package cn.windery.sentinel.sentinel.slots;
 
-import cn.windery.learning.base.sentinel.Context;
+import cn.windery.sentinel.sentinel.Context;
 
 public interface ProcessSlot<T> {
 

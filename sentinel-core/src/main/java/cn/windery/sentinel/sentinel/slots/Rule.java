@@ -1,6 +1,6 @@
 package cn.windery.sentinel.sentinel.slots;
 
-import cn.windery.learning.base.sentinel.RuleType;
+import cn.windery.sentinel.sentinel.RuleType;
 
 public interface Rule {
 

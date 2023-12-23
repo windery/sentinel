@@ -1,9 +1,9 @@
 package cn.windery.sentinel.sentinel.slots;
 
-import cn.windery.learning.base.sentinel.Node;
-import cn.windery.learning.base.sentinel.slots.statistic.ArrayMetric;
-import cn.windery.learning.base.sentinel.slots.statistic.MetricEvent;
-import cn.windery.learning.base.sentinel.slots.statistic.SecondMetric;
+import cn.windery.sentinel.sentinel.Node;
+import cn.windery.sentinel.sentinel.slots.statistic.ArrayMetric;
+import cn.windery.sentinel.sentinel.slots.statistic.MetricEvent;
+import cn.windery.sentinel.sentinel.slots.statistic.SecondMetric;
 
 public class StatisticNode implements Node, SecondMetric {
 

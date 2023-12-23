@@ -1,20 +1,19 @@
 package sentinel.slots.degrade;
 
-import cn.windery.learning.base.sentinel.Aph;
-import cn.windery.learning.base.sentinel.AphInitializer;
-import cn.windery.learning.base.sentinel.Tracer;
-import cn.windery.learning.base.sentinel.exception.BlockException;
-import cn.windery.learning.base.sentinel.slots.flow.RuleManager;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import cn.windery.sentinel.sentinel.Aph;
+import cn.windery.sentinel.sentinel.AphInitializer;
+import cn.windery.sentinel.sentinel.Tracer;
+import cn.windery.sentinel.sentinel.exception.BlockException;
+import cn.windery.sentinel.sentinel.slots.degrade.DegradeRule;
+import cn.windery.sentinel.sentinel.slots.flow.RuleManager;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class DegradeSlotTest {
 
     static String resource = "test_resource";
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         DegradeRule degradeRule = new DegradeRule(resource);
         degradeRule.setMaxRt(10);

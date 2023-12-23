@@ -1,10 +1,10 @@
 package cn.windery.sentinel.sentinel.slots.flow;
 
-import cn.windery.learning.base.sentinel.RuleType;
-import cn.windery.learning.base.sentinel.slots.Rule;
-import cn.windery.learning.base.sentinel.slots.degrade.DegradeRule;
-import cn.windery.learning.base.sentinel.util.AssertUtil;
-import org.apache.commons.collections.CollectionUtils;
+import cn.windery.sentinel.sentinel.RuleType;
+import cn.windery.sentinel.sentinel.slots.Rule;
+import cn.windery.sentinel.sentinel.slots.degrade.DegradeRule;
+import cn.windery.sentinel.sentinel.util.AssertUtil;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

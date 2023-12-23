@@ -1,9 +1,9 @@
 package cn.windery.sentinel.sentinel.slots.flow;
 
-import cn.windery.learning.base.sentinel.Context;
-import cn.windery.learning.base.sentinel.exception.BlockException;
-import cn.windery.learning.base.sentinel.slots.AbstractLinkedProcessSlot;
-import cn.windery.learning.base.sentinel.slots.StatisticNode;
+import cn.windery.sentinel.sentinel.Context;
+import cn.windery.sentinel.sentinel.exception.BlockException;
+import cn.windery.sentinel.sentinel.slots.AbstractLinkedProcessSlot;
+import cn.windery.sentinel.sentinel.slots.StatisticNode;
 
 public class FlowSlot extends AbstractLinkedProcessSlot<StatisticNode> {
 

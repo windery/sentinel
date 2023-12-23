@@ -1,10 +1,10 @@
 package cn.windery.sentinel.sentinel.slots;
 
-import cn.windery.learning.base.sentinel.log.LogSlot;
-import cn.windery.learning.base.sentinel.slots.degrade.DegradeSlot;
-import cn.windery.learning.base.sentinel.slots.flow.FlowSlot;
-import cn.windery.learning.base.sentinel.slots.nodeselect.NodeSelectSlot;
-import cn.windery.learning.base.sentinel.slots.statistic.StatisticSlot;
+import cn.windery.sentinel.sentinel.log.LogSlot;
+import cn.windery.sentinel.sentinel.slots.degrade.DegradeSlot;
+import cn.windery.sentinel.sentinel.slots.flow.FlowSlot;
+import cn.windery.sentinel.sentinel.slots.nodeselect.NodeSelectSlot;
+import cn.windery.sentinel.sentinel.slots.statistic.StatisticSlot;
 
 public class SlotChainBuilder {
 

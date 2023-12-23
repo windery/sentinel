@@ -2,6 +2,7 @@ package cn.windery.sentinel.sentinel.slots.degrade.circuitbreak;
 
 import cn.windery.sentinel.sentinel.slots.degrade.DegradeRule;
 import cn.windery.sentinel.sentinel.slots.flow.RuleManager;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
