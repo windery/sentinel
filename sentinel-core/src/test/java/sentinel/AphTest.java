@@ -1,11 +1,11 @@
 package sentinel;
 
-import cn.windery.sentinel.sentinel.Aph;
-import cn.windery.sentinel.sentinel.AphInitializer;
-import cn.windery.sentinel.sentinel.Tracer;
-import cn.windery.sentinel.sentinel.exception.BlockException;
-import cn.windery.sentinel.sentinel.slots.flow.FlowRule;
-import cn.windery.sentinel.sentinel.slots.flow.RuleManager;
+import cn.windery.sentinel.Aph;
+import cn.windery.sentinel.AphInitializer;
+import cn.windery.sentinel.Tracer;
+import cn.windery.sentinel.exception.BlockException;
+import cn.windery.sentinel.slots.FlowRuleManager;
+import cn.windery.sentinel.slots.flow.FlowRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ public class AphTest {
     @BeforeAll
     public static void setUp() {
         FlowRule flowRule = new FlowRule("test_resource", 70);
-        RuleManager.addRule("test_resource", flowRule);
+        FlowRuleManager.getInstance().addRule(flowRule);
 
         AphInitializer.initialize();
     }

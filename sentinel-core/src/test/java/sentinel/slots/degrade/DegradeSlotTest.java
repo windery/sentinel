@@ -1,11 +1,11 @@
 package sentinel.slots.degrade;
 
-import cn.windery.sentinel.sentinel.Aph;
-import cn.windery.sentinel.sentinel.AphInitializer;
-import cn.windery.sentinel.sentinel.Tracer;
-import cn.windery.sentinel.sentinel.exception.BlockException;
-import cn.windery.sentinel.sentinel.slots.degrade.DegradeRule;
-import cn.windery.sentinel.sentinel.slots.flow.RuleManager;
+import cn.windery.sentinel.Aph;
+import cn.windery.sentinel.AphInitializer;
+import cn.windery.sentinel.Tracer;
+import cn.windery.sentinel.exception.BlockException;
+import cn.windery.sentinel.slots.degrade.DegradeRule;
+import cn.windery.sentinel.slots.degrade.DegradeRuleManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ public class DegradeSlotTest {
         degradeRule.setMinRequests(10);
         degradeRule.setThreshold(0.5);
         degradeRule.setRetryWaitTime(1000);
-        RuleManager.addRule(resource, degradeRule);
+        DegradeRuleManager.getInstance().addRule(degradeRule);
 
         AphInitializer.initialize();
     }

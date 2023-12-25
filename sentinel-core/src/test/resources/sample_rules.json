@@ -1,0 +1,41 @@
+{
+  "flow_rules": {
+    "test_resource1": [
+      {
+        "threshold": 100
+      },
+      {
+        "threshold": 102
+      }
+    ],
+    "test_resource2": [
+      {
+        "threshold": 100
+      },
+      {
+        "threshold": 102
+      }
+    ]
+  },
+  "degrade_rules": {
+    "test_resource1": [
+      {
+        "threshold": 0.5,
+        "retryWaitTime": 1000,
+        "minRequests": 10,
+        "maxRt": 2000
+      },
+      {
+        "threshold": 0.2
+      }
+    ],
+    "test_resource2": [
+      {
+        "threshold": 1,
+        "retryWaitTime": 1000,
+        "minRequests": 10,
+        "maxRt": 2000
+      }
+    ]
+  }
+}
