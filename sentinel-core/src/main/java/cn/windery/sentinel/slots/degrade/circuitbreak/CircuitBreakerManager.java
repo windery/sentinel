@@ -51,7 +51,8 @@ public class CircuitBreakerManager {
         breakerMap.put(resource, newBreakers);
     }
 
-    public static List<CircuitBreaker> createDefaultBreakersFromRules(String resource) {
+    // 这个操作比较轻量级，直接加synchronized锁
+    synchronized public static List<CircuitBreaker> createDefaultBreakersFromRules(String resource) {
 
         List<DegradeRule> degradeRules = DegradeRuleManager.getInstance().defaultRules();
         if (degradeRules != null) {
