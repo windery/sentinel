@@ -37,7 +37,8 @@ public class CircuitBreakerManager {
     }
 
     public static List<CircuitBreaker> getBreakers(String resource) {
-        return breakerMap.get(resource);
+        List<CircuitBreaker> circuitBreakers = breakerMap.get(resource);
+        return circuitBreakers;
     }
 
     public static void addBreaker(String resource, CircuitBreaker circuitBreaker) {
@@ -48,6 +49,25 @@ public class CircuitBreakerManager {
         }
         newBreakers.add(circuitBreaker);
         breakerMap.put(resource, newBreakers);
+    }
+
+    public static List<CircuitBreaker> createDefaultBreakersFromRules(String resource) {
+
+        List<DegradeRule> degradeRules = DegradeRuleManager.getInstance().defaultRules();
+        if (degradeRules != null) {
+            List<CircuitBreaker> breakers = new ArrayList<>();
+            for (DegradeRule degradeRule : degradeRules) {
+                try {
+                    CircuitBreaker circuitBreaker = new ResponseTimeCircuitBreaker(degradeRule);
+                    breakers.add(circuitBreaker);
+                } catch (Exception e) {
+                    log.warn("Failed to initialize circuit breaker for resource {}", degradeRule.getResource(), e);
+                }
+            }
+            breakerMap.put(resource, breakers);
+        }
+
+        return breakerMap.get(resource);
     }
 
 }

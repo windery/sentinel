@@ -16,10 +16,13 @@ public class DegradeSlot extends AbstractLinkedProcessSlot<StatisticNode> {
     public void entry(Context context, String resource) {
 
         List<CircuitBreaker> breakers = CircuitBreakerManager.getBreakers(resource);
+        if (breakers == null) {
+            breakers = CircuitBreakerManager.createDefaultBreakersFromRules(resource);
+        }
         if (!CollectionUtils.isEmpty(breakers)) {
             for (CircuitBreaker breaker : breakers) {
                 if (!breaker.canPass()) {
-                    throw new DegradeException("resource " + resource + " blocked by DegradeSlot");
+                    throw new DegradeException("resource " + resource + " blocked by DegradeSlot", breaker.getRule());
                 }
             }
         }

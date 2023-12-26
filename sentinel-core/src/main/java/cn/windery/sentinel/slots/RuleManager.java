@@ -17,6 +17,14 @@ public class RuleManager<R extends Rule> {
         return rulesMap;
     }
 
+    public List<R> defaultRules() {
+        List<R> defaultRules = rulesMap.get("default");
+        if (defaultRules == null) {
+            return Collections.emptyList();
+        }
+        return defaultRules;
+    }
+
     public List<R> getRules(String resource) {
         List<R> flowRules = rulesMap.get(resource);
         if (CollectionUtils.isEmpty(flowRules)) {

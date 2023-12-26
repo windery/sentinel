@@ -1,24 +1,20 @@
 package cn.windery.sentinel.exception;
 
+import cn.windery.sentinel.slots.degrade.DegradeRule;
+
 public class DegradeException extends BlockException {
 
-    public DegradeException() {
-    }
+    private DegradeRule rule;
+    private long requests;
+    private double rt;
 
-    public DegradeException(String message) {
+    public DegradeException(String message, DegradeRule rule) {
         super(message);
+        this.rule = rule;
     }
 
-    public DegradeException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public DegradeException(Throwable cause) {
-        super(cause);
-    }
-
-    public DegradeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public DegradeRule getRule() {
+        return rule;
     }
 
 }
