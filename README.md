@@ -1,2 +1,2 @@
-# sentinel-x
+# sentinel
 A simplified version of alibaba sentinel. 
