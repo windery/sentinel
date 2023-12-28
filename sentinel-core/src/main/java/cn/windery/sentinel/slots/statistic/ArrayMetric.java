@@ -15,6 +15,7 @@ public class ArrayMetric extends LeapArray<Metric> implements SecondMetric {
         return new WindowWrap<Metric>(windowStart, windowLengthInMs, new Metric());
     }
 
+
     @Override
     protected void resetWindowTo(WindowWrap<Metric> windowWrap, long windowStart) {
         windowWrap.resetTo(windowStart);

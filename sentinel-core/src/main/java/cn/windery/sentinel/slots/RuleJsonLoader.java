@@ -4,7 +4,6 @@ import cn.windery.sentinel.slots.degrade.DegradeRule;
 import cn.windery.sentinel.slots.degrade.DegradeRuleManager;
 import cn.windery.sentinel.slots.flow.FlowRule;
 import cn.windery.sentinel.util.AssertUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -63,7 +62,6 @@ public class RuleJsonLoader implements RuleLoader {
                             degradeRule.setMinRequests(degradeRuleNode.path("minRequests").asInt(10));
                             degradeRule.setMaxRt(degradeRuleNode.path("maxRt").asInt(1000));
                             degradeRule.setWindowLengthInMs(degradeRuleNode.path("windowLengthInMs").asInt(1000));
-                            degradeRule.setSampleCount(degradeRuleNode.path("sampleCount").asInt(1));
                             degradeRuleMap.computeIfAbsent(resource, k -> new ArrayList<>()).add(degradeRule);
                         }
                     } catch (Exception e) {

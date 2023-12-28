@@ -20,6 +20,7 @@ public class DegradeSlotTest {
         degradeRule.setMinRequests(10);
         degradeRule.setThreshold(0.5);
         degradeRule.setRetryWaitTime(1000);
+        degradeRule.setWindowLengthInMs(1000);
         DegradeRuleManager.getInstance().addRule(degradeRule);
 
         AphInitializer.initialize();

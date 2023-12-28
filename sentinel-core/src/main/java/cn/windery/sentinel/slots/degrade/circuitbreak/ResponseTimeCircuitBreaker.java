@@ -5,16 +5,21 @@ import cn.windery.sentinel.Context;
 import cn.windery.sentinel.WindowWrap;
 import cn.windery.sentinel.slots.degrade.DegradeRule;
 import cn.windery.sentinel.slots.statistic.LeapArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.LongAdder;
 
 public class ResponseTimeCircuitBreaker extends AbstractCircuitBreaker {
 
+    private static final Logger log = LoggerFactory.getLogger(ResponseTimeCircuitBreaker.class);
+    private static final Logger metricLog = LoggerFactory.getLogger("response-time-circuit-breaker-metric");
+
     private final LeapArray<SlowRequestCounter> slowRequestLeapArray;
 
     public ResponseTimeCircuitBreaker(DegradeRule rule) {
         super(rule);
-        slowRequestLeapArray = new SlowRequestLeapArray(rule.getSampleCount(), rule.getWindowLengthInMs());
+        slowRequestLeapArray = new SlowRequestLeapArray(1, rule.getWindowLengthInMs());
     }
 
     @Override
@@ -36,19 +41,25 @@ public class ResponseTimeCircuitBreaker extends AbstractCircuitBreaker {
 
         if (currentState() == State.HALF_OPEN) {
             if (rt > getThreshold()) {
+                log.info("resource {} circuit breaker recover failed, recover request rt: {}, matRt: {}",
+                        rule.getResource(), rt, getThreshold());
                 fromHalfOpenToOpen();
             } else {
+                log.info("resource {} circuit breaker recover success, recover request rt: {}, maxRt: {}",
+                        rule.getResource(), rt, getThreshold());
                 fromHalfOpenToClosed();
             }
             return;
         }
 
-        System.out.println(counter.totalCount.longValue());
         if (counter.totalCount.longValue() < getMinRequests()) {
             return;
         }
 
-        if (counter.slowCount.doubleValue() / counter.totalCount.doubleValue() > getThreshold()) {
+        double slowRatio = counter.slowCount.doubleValue() / counter.totalCount.doubleValue();
+        if (slowRatio > getThreshold()) {
+            log.info("resource {} circuit breaker slow request ratio is {}, threshold is {}, counter: {}",
+                    rule.getResource(), slowRatio, getThreshold(), counter);
             fromClosedToOpen();
         }
 
@@ -65,6 +76,13 @@ public class ResponseTimeCircuitBreaker extends AbstractCircuitBreaker {
             totalCount.reset();
         }
 
+        @Override
+        public String toString() {
+            return "SlowRequestCounter{" +
+                    "slowCount=" + slowCount +
+                    ", totalCount=" + totalCount +
+                    '}';
+        }
     }
 
     static class SlowRequestLeapArray extends LeapArray<SlowRequestCounter> {
@@ -75,7 +93,17 @@ public class ResponseTimeCircuitBreaker extends AbstractCircuitBreaker {
 
         @Override
         public WindowWrap<SlowRequestCounter> newEmptyBucket(long windowStart, int windowLengthInMs) {
-            return new WindowWrap<>(windowLengthInMs, windowStart, new SlowRequestCounter());
+            return new WindowWrap<>(windowStart, windowLengthInMs, new SlowRequestCounter());
+        }
+
+        @Override
+        protected void logWindowStatistic(WindowWrap<SlowRequestCounter> window) {
+            long windowStart = window.getWindowStart();
+            if (windowStart <= 0) {
+                return;
+            }
+            SlowRequestCounter counter = window.getValue();
+            metricLog.info("slow request time: {}, counter: {}", windowStart, counter);
         }
 
         @Override

@@ -1,16 +1,14 @@
 package cn.windery.sentinel.slots;
 
 import cn.windery.sentinel.Node;
-import cn.windery.sentinel.slots.statistic.ArrayMetric;
-import cn.windery.sentinel.slots.statistic.MetricEvent;
-import cn.windery.sentinel.slots.statistic.SecondMetric;
+import cn.windery.sentinel.slots.statistic.*;
 
 public class StatisticNode implements Node, SecondMetric {
 
     private String resource;
 
     // 1 second -> 2 500ms buckets
-    private ArrayMetric secondMtrics = new ArrayMetric(2, 1000);
+    private ArrayMetric secondMtrics = new SecondArrayMetric();
     // 1 minute -> 60 1s buckets
     private ArrayMetric minuteMtrics = new ArrayMetric(60, 60*1000);
 

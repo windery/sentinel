@@ -49,18 +49,18 @@ public abstract class AbstractCircuitBreaker implements CircuitBreaker {
     }
 
     protected boolean fromOpenToHalfOpen() {
-        log.debug("resource {} circuit breaker state change from OPEN to HALF_OPEN", rule.getResource());
+        log.info("resource {} circuit breaker state change from OPEN to HALF_OPEN", rule.getResource());
         return currentState.compareAndSet(State.OPEN, State.HALF_OPEN);
     }
 
     protected boolean fromClosedToOpen() {
-        log.debug("resource {} circuit breaker state change from CLOSED to OPEN", rule.getResource());
+        log.info("resource {} circuit breaker state change from CLOSED to OPEN", rule.getResource());
         updateNextRetryTimestamp();
         return currentState.compareAndSet(State.CLOSED, State.OPEN);
     }
 
     protected boolean fromHalfOpenToOpen() {
-        log.debug("resource {} circuit breaker state change from HALF_OPEN to OPEN", rule.getResource());
+        log.info("resource {} circuit breaker state change from HALF_OPEN to OPEN", rule.getResource());
         updateNextRetryTimestamp();
         return currentState.compareAndSet(State.HALF_OPEN, State.OPEN);
     }
@@ -70,7 +70,7 @@ public abstract class AbstractCircuitBreaker implements CircuitBreaker {
     }
 
     protected boolean fromHalfOpenToClosed() {
-        log.debug("resource {} circuit breaker state change from HALF_OPEN to CLOSED", rule.getResource());
+        log.info("resource {} circuit breaker state change from HALF_OPEN to CLOSED", rule.getResource());
         return currentState.compareAndSet(State.HALF_OPEN, State.CLOSED);
     }
 

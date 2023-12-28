@@ -17,7 +17,11 @@ public class DegradeSlot extends AbstractLinkedProcessSlot<StatisticNode> {
 
         List<CircuitBreaker> breakers = CircuitBreakerManager.getBreakers(resource);
         if (breakers == null) {
-            breakers = CircuitBreakerManager.createDefaultBreakersFromRules(resource);
+            synchronized (this) {
+                if (breakers == null) {
+                    breakers = CircuitBreakerManager.createDefaultBreakersFromRules(resource);
+                }
+            }
         }
         if (!CollectionUtils.isEmpty(breakers)) {
             for (CircuitBreaker breaker : breakers) {

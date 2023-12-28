@@ -11,7 +11,6 @@ public class DegradeRule extends AbstractRule {
     protected int minRequests;
     protected int maxRt;
     protected int windowLengthInMs;
-    protected int sampleCount;
 
     public DegradeRule(String resource) {
         super(resource, RuleType.DEGRADE.name().toLowerCase());
@@ -57,14 +56,6 @@ public class DegradeRule extends AbstractRule {
         this.windowLengthInMs = windowLengthInMs;
     }
 
-    public int getSampleCount() {
-        return sampleCount;
-    }
-
-    public void setSampleCount(int sampleCount) {
-        this.sampleCount = sampleCount;
-    }
-
     @Override
     public String toString() {
         return "DegradeRule{" +
@@ -73,7 +64,6 @@ public class DegradeRule extends AbstractRule {
                 ", minRequests=" + minRequests +
                 ", maxRt=" + maxRt +
                 ", windowLengthInMs=" + windowLengthInMs +
-                ", sampleCount=" + sampleCount +
                 ", resource='" + resource + '\'' +
                 ", type='" + type + '\'' +
                 '}';
