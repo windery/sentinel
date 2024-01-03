@@ -15,7 +15,7 @@ public class LogSlot extends AbstractLinkedProcessSlot<StatisticNode> {
     public void entry(Context context, String resource) {
         fireEntry(context, resource);
         StatisticNode node = context.getNode();
-//        log.info("LogSlot entry: \n{}", logStatistic(node));
+        log.info("LogSlot entry: \n{}", logStatistic(node));
     }
 
     @Override

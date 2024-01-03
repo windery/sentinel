@@ -5,6 +5,7 @@ import cn.windery.sentinel.Context;
 import cn.windery.sentinel.WindowWrap;
 import cn.windery.sentinel.slots.degrade.DegradeRule;
 import cn.windery.sentinel.slots.statistic.LeapArray;
+import cn.windery.sentinel.util.AssertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,6 @@ import java.util.concurrent.atomic.LongAdder;
 public class ResponseTimeCircuitBreaker extends AbstractCircuitBreaker {
 
     private static final Logger log = LoggerFactory.getLogger(ResponseTimeCircuitBreaker.class);
-    private static final Logger metricLog = LoggerFactory.getLogger("response-time-circuit-breaker-metric");
 
     private final LeapArray<SlowRequestCounter> slowRequestLeapArray;
 
@@ -39,16 +39,25 @@ public class ResponseTimeCircuitBreaker extends AbstractCircuitBreaker {
             return;
         }
 
-        if (currentState() == State.HALF_OPEN) {
-            if (rt > getThreshold()) {
-                log.info("resource {} circuit breaker recover failed, recover request rt: {}, matRt: {}",
-                        rule.getResource(), rt, getThreshold());
-                fromHalfOpenToOpen();
-            } else {
-                log.info("resource {} circuit breaker recover success, recover request rt: {}, maxRt: {}",
-                        rule.getResource(), rt, getThreshold());
-                fromHalfOpenToClosed();
+        if (currentState() == State.HALF_OPEN && context.isRecoverRequest()) {
+            recoverRequestCounter.addFinished();
+            if (rt > getMaxRt()) {
+                recoverRequestCounter.addFail();
             }
+            AssertUtil.isTrue(rule.getRecoverPass() > 0, "recover pass must be positive");
+            if (recoverRequestCounter.getFinished() >= rule.getRecoverPass()) {
+                double recoverThreshold = recoverRequestCounter.getFail() * 1.0 / recoverRequestCounter.getFinished();
+                if (recoverThreshold < rule.getThreshold()) {
+                    log.info("resource {} circuit breaker recover success, recover pass count: {}, recover request count: {},  maxRt: {}, request slow rate threshold: {}, recover requests slow rate: {}",
+                            rule.getResource(), rule.getRecoverPass(), recoverRequestCounter, getMaxRt(), getThreshold(), recoverThreshold);
+                    fromHalfOpenToClosed();
+                } else {
+                    log.info("resource {} circuit breaker recover fail, recover pass count: {}, recover request count: {},  maxRt: {}, request slow rate threshold: {}, recover requests slow rate: {}",
+                            rule.getResource(), rule.getRecoverPass(), recoverRequestCounter, getMaxRt(), getThreshold(), recoverThreshold);
+                    fromHalfOpenToOpen();
+                }
+            }
+            context.setRecoverRequest(false);
             return;
         }
 
@@ -97,20 +106,11 @@ public class ResponseTimeCircuitBreaker extends AbstractCircuitBreaker {
         }
 
         @Override
-        protected void logWindowStatistic(WindowWrap<SlowRequestCounter> window) {
-            long windowStart = window.getWindowStart();
-            if (windowStart <= 0) {
-                return;
-            }
-            SlowRequestCounter counter = window.getValue();
-            metricLog.info("slow request time: {}, counter: {}", windowStart, counter);
-        }
-
-        @Override
         protected void resetWindowTo(WindowWrap<SlowRequestCounter> windowWrap, long startTime) {
             windowWrap.resetTo(startTime);
             windowWrap.getValue().reset();
         }
     }
+
 
 }

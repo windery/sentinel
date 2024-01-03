@@ -13,6 +13,8 @@ public class Context {
 
     private Throwable error;
 
+    private boolean recoverRequest;
+
     public StatisticNode getNode() {
         return node;
     }
@@ -43,5 +45,13 @@ public class Context {
 
     public void setEntryTime(long entryTime) {
         this.entryTime = entryTime;
+    }
+
+    public boolean isRecoverRequest() {
+        return recoverRequest;
+    }
+
+    public void setRecoverRequest(boolean recoverRequest) {
+        this.recoverRequest = recoverRequest;
     }
 }

@@ -1,10 +1,15 @@
 package cn.windery.sentinel.slots.degrade.circuitbreak;
 
+import cn.windery.sentinel.Context;
+import cn.windery.sentinel.ContextUtil;
 import cn.windery.sentinel.slots.degrade.DegradeRule;
+import cn.windery.sentinel.util.AssertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.LongAdder;
+import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class AbstractCircuitBreaker implements CircuitBreaker {
 
@@ -15,9 +20,14 @@ public abstract class AbstractCircuitBreaker implements CircuitBreaker {
 
     protected final AtomicReference<State> currentState = new AtomicReference<>(State.CLOSED);
 
+    private final ReentrantLock RECOVER_LOCK = new ReentrantLock();
+
+    protected final RecoverRequestCounter recoverRequestCounter;
+
 
     public AbstractCircuitBreaker(DegradeRule rule) {
         this.rule = rule;
+        this.recoverRequestCounter = new RecoverRequestCounter();
     }
 
     @Override
@@ -31,6 +41,23 @@ public abstract class AbstractCircuitBreaker implements CircuitBreaker {
                 return true;
             }
         }
+
+        AssertUtil.isTrue(rule.getRecoverPass() > 0, "recover pass must be positive");
+        if (currentState.get() == State.HALF_OPEN && recoverRequestCounter.getPass() < rule.getRecoverPass()) {
+            if (RECOVER_LOCK.tryLock()) {
+                try {
+                    if (recoverRequestCounter.getPass() <= rule.getRecoverPass()) {
+                        recoverRequestCounter.addPass();
+                        ContextUtil.getContext().setRecoverRequest(true);
+                        log.debug("resource {} circuit breaker pass 1 recover request, current count: {}", rule.getResource(), recoverRequestCounter);
+                        return true;
+                    }
+                } finally {
+                    RECOVER_LOCK.unlock();
+                }
+            }
+        }
+
         return false;
     }
 
@@ -50,19 +77,26 @@ public abstract class AbstractCircuitBreaker implements CircuitBreaker {
 
     protected boolean fromOpenToHalfOpen() {
         log.info("resource {} circuit breaker state change from OPEN to HALF_OPEN", rule.getResource());
+        recoverRequestCounter.reset();
         return currentState.compareAndSet(State.OPEN, State.HALF_OPEN);
     }
 
     protected boolean fromClosedToOpen() {
         log.info("resource {} circuit breaker state change from CLOSED to OPEN", rule.getResource());
-        updateNextRetryTimestamp();
-        return currentState.compareAndSet(State.CLOSED, State.OPEN);
+        boolean success = currentState.compareAndSet(State.CLOSED, State.OPEN);
+        if (success) {
+            updateNextRetryTimestamp();
+        }
+        return success;
     }
 
     protected boolean fromHalfOpenToOpen() {
         log.info("resource {} circuit breaker state change from HALF_OPEN to OPEN", rule.getResource());
-        updateNextRetryTimestamp();
-        return currentState.compareAndSet(State.HALF_OPEN, State.OPEN);
+        boolean success = currentState.compareAndSet(State.HALF_OPEN, State.OPEN);
+        if (success) {
+            updateNextRetryTimestamp();
+        }
+        return success;
     }
 
     private void updateNextRetryTimestamp() {
@@ -88,6 +122,55 @@ public abstract class AbstractCircuitBreaker implements CircuitBreaker {
 
     protected long getMaxRt() {
         return this.rule.getMaxRt();
+    }
+
+
+    static class RecoverRequestCounter {
+
+        private LongAdder pass = new LongAdder();
+        private LongAdder fail = new LongAdder();
+        private LongAdder finished = new LongAdder();
+
+
+
+        public void addPass() {
+            pass.increment();
+        }
+
+        public void addFail() {
+            fail.increment();
+        }
+
+        public void addFinished() {
+            finished.increment();
+        }
+
+        public long getPass() {
+            return pass.longValue();
+        }
+
+        public long getFail() {
+            return fail.longValue();
+        }
+
+        public long getFinished() {
+            return finished.longValue();
+        }
+
+        public void reset() {
+            pass.reset();
+            fail.reset();
+            finished.reset();
+        }
+
+        @Override
+        public String toString() {
+            return "RecoverRequestCounter{" +
+                    "pass=" + pass +
+                    ", fail=" + fail +
+                    ", finished=" + finished +
+                    '}';
+        }
     }
 
 }

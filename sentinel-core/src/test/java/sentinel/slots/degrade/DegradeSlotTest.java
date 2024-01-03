@@ -8,8 +8,11 @@ import cn.windery.sentinel.slots.degrade.DegradeRule;
 import cn.windery.sentinel.slots.degrade.DegradeRuleManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
 
 public class DegradeSlotTest {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(DegradeSlotTest.class);
 
     static String resource = "test_resource";
 
@@ -21,6 +24,7 @@ public class DegradeSlotTest {
         degradeRule.setThreshold(0.5);
         degradeRule.setRetryWaitTime(1000);
         degradeRule.setWindowLengthInMs(1000);
+        degradeRule.setRecoverPass(10);
         DegradeRuleManager.getInstance().addRule(degradeRule);
 
         AphInitializer.initialize();
@@ -38,7 +42,7 @@ public class DegradeSlotTest {
                 try {
                     Aph.entry("test_resource");
                     if (!blocked) {
-                        System.out.println("wait 15ms");
+//                        System.out.println("wait 15ms");
                         Thread.sleep(15);
                     } else {
                         noBlockCount++;
@@ -47,18 +51,19 @@ public class DegradeSlotTest {
                             noBlockCount = 0;
                         }
                     }
-                    System.out.println("==========  main logic =========");
+//                    System.out.println("==========  main logic =========");
                 } finally {
                     Aph.exit("test_resource");
                 }
             } catch (BlockException be) {
-                System.out.println("blocked...");
+//                System.out.println("blocked...");
                 blocked = true;
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 throw e;
             } catch (Exception e) {
                 Tracer.trace(e);
+                log.error("error", e);
             }
         }
 

@@ -50,10 +50,6 @@ public abstract class LeapArray<T> {
 
     abstract public WindowWrap<T> newEmptyBucket(long windowStart, int windowLengthInMs);
 
-    protected void logWindowStatistic(WindowWrap<T> window) {
-
-    }
-
     public WindowWrap<T> currentWindow(long timeMillis) {
         int windowIndex = calculateTimeIdx(timeMillis);
         long windowStart = calculateWindowStart(timeMillis);
@@ -72,7 +68,6 @@ public abstract class LeapArray<T> {
             } else if (windowStart > old.getWindowStart()) {
                 if (updateLock.tryLock()) {
                     try {
-                        logWindowStatistic(old);
                         resetWindowTo(old, windowStart);
                     } finally {
                         updateLock.unlock();

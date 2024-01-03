@@ -8,7 +8,7 @@ public class StatisticNode implements Node, SecondMetric {
     private String resource;
 
     // 1 second -> 2 500ms buckets
-    private ArrayMetric secondMtrics = new SecondArrayMetric();
+    private ArrayMetric secondMtrics = new ArrayMetric(2, 1000);
     // 1 minute -> 60 1s buckets
     private ArrayMetric minuteMtrics = new ArrayMetric(60, 60*1000);
 
@@ -64,4 +64,5 @@ public class StatisticNode implements Node, SecondMetric {
     public long rt() {
         return secondMtrics.rt();
     }
+
 }

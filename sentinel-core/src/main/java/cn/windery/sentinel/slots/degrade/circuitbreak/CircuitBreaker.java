@@ -11,6 +11,7 @@ public interface CircuitBreaker {
 
     State currentState();
 
+
     void onRequestComplete(Context context);
 
 

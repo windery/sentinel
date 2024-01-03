@@ -11,6 +11,22 @@ public class DegradeRule extends AbstractRule {
     protected int minRequests;
     protected int maxRt;
     protected int windowLengthInMs;
+    protected int recoverPass;
+
+    @Override
+    public String toString() {
+        return "DegradeRule{" +
+                "threshold=" + threshold +
+                ", retryWaitTime=" + retryWaitTime +
+                ", minRequests=" + minRequests +
+                ", maxRt=" + maxRt +
+                ", windowLengthInMs=" + windowLengthInMs +
+                ", recoverPass=" + recoverPass +
+                ", resource='" + resource + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
+
 
     public DegradeRule(String resource) {
         super(resource, RuleType.DEGRADE.name().toLowerCase());
@@ -56,16 +72,12 @@ public class DegradeRule extends AbstractRule {
         this.windowLengthInMs = windowLengthInMs;
     }
 
-    @Override
-    public String toString() {
-        return "DegradeRule{" +
-                "threshold=" + threshold +
-                ", retryWaitTime=" + retryWaitTime +
-                ", minRequests=" + minRequests +
-                ", maxRt=" + maxRt +
-                ", windowLengthInMs=" + windowLengthInMs +
-                ", resource='" + resource + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+    public int getRecoverPass() {
+        return recoverPass;
     }
+
+    public void setRecoverPass(int recoverPass) {
+        this.recoverPass = recoverPass;
+    }
+
 }
