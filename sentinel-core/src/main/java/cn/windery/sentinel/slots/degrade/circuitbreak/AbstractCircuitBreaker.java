@@ -1,6 +1,5 @@
 package cn.windery.sentinel.slots.degrade.circuitbreak;
 
-import cn.windery.sentinel.Context;
 import cn.windery.sentinel.ContextUtil;
 import cn.windery.sentinel.slots.degrade.DegradeRule;
 import cn.windery.sentinel.util.AssertUtil;
@@ -38,26 +37,43 @@ public abstract class AbstractCircuitBreaker implements CircuitBreaker {
 
         if (currentState.get() == State.OPEN) {
             if (retryTimeArrived() && fromOpenToHalfOpen()) {
+                if (recoverRequestCounter.getPass() < rule.getRecoverRequests()) {
+                    if (passRecoverRequest()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        AssertUtil.isTrue(rule.getRecoverRequests() > 0, "recover pass must be positive");
+        if (currentState.get() == State.HALF_OPEN && hasMoreRecoverRequests()) {
+            if (passRecoverRequest()) {
                 return true;
             }
         }
 
-        AssertUtil.isTrue(rule.getRecoverPass() > 0, "recover pass must be positive");
-        if (currentState.get() == State.HALF_OPEN && recoverRequestCounter.getPass() < rule.getRecoverPass()) {
-            if (RECOVER_LOCK.tryLock()) {
-                try {
-                    if (recoverRequestCounter.getPass() <= rule.getRecoverPass()) {
-                        recoverRequestCounter.addPass();
-                        ContextUtil.getContext().setRecoverRequest(true);
-                        log.debug("resource {} circuit breaker pass 1 recover request, current count: {}", rule.getResource(), recoverRequestCounter);
-                        return true;
-                    }
-                } finally {
-                    RECOVER_LOCK.unlock();
+        return false;
+    }
+
+    private boolean hasMoreRecoverRequests() {
+        return recoverRequestCounter.getPass() < rule.getRecoverRequests();
+    }
+
+    private boolean passRecoverRequest() {
+        if (RECOVER_LOCK.tryLock()) {
+            try {
+                // double check
+                if (hasMoreRecoverRequests()) {
+                    recoverRequestCounter.addPass();
+                    ContextUtil.getContext().setRecoverRequest(true);
+                    log.debug("resource {} circuit breaker pass 1 recover request, current pass: {}", rule.getResource(), recoverRequestCounter.getPass());
+                    return true;
                 }
+            } finally {
+                RECOVER_LOCK.unlock();
             }
         }
-
         return false;
     }
 

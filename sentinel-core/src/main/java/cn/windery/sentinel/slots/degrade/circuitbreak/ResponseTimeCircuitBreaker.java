@@ -44,16 +44,16 @@ public class ResponseTimeCircuitBreaker extends AbstractCircuitBreaker {
             if (rt > getMaxRt()) {
                 recoverRequestCounter.addFail();
             }
-            AssertUtil.isTrue(rule.getRecoverPass() > 0, "recover pass must be positive");
-            if (recoverRequestCounter.getFinished() >= rule.getRecoverPass()) {
+            AssertUtil.isTrue(rule.getRecoverRequests() > 0, "recover pass requests must be positive");
+            if (recoverRequestCounter.getFinished() >= rule.getRecoverRequests()) {
                 double recoverThreshold = recoverRequestCounter.getFail() * 1.0 / recoverRequestCounter.getFinished();
                 if (recoverThreshold < rule.getThreshold()) {
                     log.info("resource {} circuit breaker recover success, recover pass count: {}, recover request count: {},  maxRt: {}, request slow rate threshold: {}, recover requests slow rate: {}",
-                            rule.getResource(), rule.getRecoverPass(), recoverRequestCounter, getMaxRt(), getThreshold(), recoverThreshold);
+                            rule.getResource(), rule.getRecoverRequests(), recoverRequestCounter, getMaxRt(), getThreshold(), recoverThreshold);
                     fromHalfOpenToClosed();
                 } else {
                     log.info("resource {} circuit breaker recover fail, recover pass count: {}, recover request count: {},  maxRt: {}, request slow rate threshold: {}, recover requests slow rate: {}",
-                            rule.getResource(), rule.getRecoverPass(), recoverRequestCounter, getMaxRt(), getThreshold(), recoverThreshold);
+                            rule.getResource(), rule.getRecoverRequests(), recoverRequestCounter, getMaxRt(), getThreshold(), recoverThreshold);
                     fromHalfOpenToOpen();
                 }
             }

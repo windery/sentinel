@@ -11,7 +11,7 @@ public class DegradeRule extends AbstractRule {
     protected int minRequests;
     protected int maxRt;
     protected int windowLengthInMs;
-    protected int recoverPass;
+    protected int recoverRequests;
 
     @Override
     public String toString() {
@@ -21,7 +21,7 @@ public class DegradeRule extends AbstractRule {
                 ", minRequests=" + minRequests +
                 ", maxRt=" + maxRt +
                 ", windowLengthInMs=" + windowLengthInMs +
-                ", recoverPass=" + recoverPass +
+                ", recoverRequests=" + recoverRequests +
                 ", resource='" + resource + '\'' +
                 ", type='" + type + '\'' +
                 '}';
@@ -72,12 +72,12 @@ public class DegradeRule extends AbstractRule {
         this.windowLengthInMs = windowLengthInMs;
     }
 
-    public int getRecoverPass() {
-        return recoverPass;
+    public int getRecoverRequests() {
+        return recoverRequests;
     }
 
-    public void setRecoverPass(int recoverPass) {
-        this.recoverPass = recoverPass;
+    public void setRecoverRequests(int recoverRequests) {
+        this.recoverRequests = recoverRequests;
     }
 
 }

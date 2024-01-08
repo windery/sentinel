@@ -9,8 +9,12 @@ import cn.windery.sentinel.slots.degrade.DegradeRuleManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
+import sentinel.TimeBasedTest;
 
-public class DegradeSlotTest {
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class DegradeSlotTest extends TimeBasedTest {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(DegradeSlotTest.class);
 
@@ -24,49 +28,43 @@ public class DegradeSlotTest {
         degradeRule.setThreshold(0.5);
         degradeRule.setRetryWaitTime(1000);
         degradeRule.setWindowLengthInMs(1000);
-        degradeRule.setRecoverPass(10);
+        degradeRule.setRecoverRequests(10);
         DegradeRuleManager.getInstance().addRule(degradeRule);
 
         AphInitializer.initialize();
     }
 
     @Test
-    public void entry() throws InterruptedException {
+    public void entry() {
 
-        boolean blocked = false;
-        long noBlockCount = 0;
+        String resource = "test_resource";
+        long shortWait = 1;
+        long longWait = 15;
 
 
-        for (int i = 0; i < 2000; i++) {
-            try {
-                try {
-                    Aph.entry("test_resource");
-                    if (!blocked) {
-//                        System.out.println("wait 15ms");
-                        Thread.sleep(15);
-                    } else {
-                        noBlockCount++;
-                        if (noBlockCount > 200) {
-                            blocked = false;
-                            noBlockCount = 0;
-                        }
-                    }
-//                    System.out.println("==========  main logic =========");
-                } finally {
-                    Aph.exit("test_resource");
-                }
-            } catch (BlockException be) {
-//                System.out.println("blocked...");
-                blocked = true;
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw e;
-            } catch (Exception e) {
-                Tracer.trace(e);
-                log.error("error", e);
-            }
+        for (int i = 0; i < 10; i++) {
+            entryAndSleepFor(resource, longWait);
         }
 
+        System.out.println("after breaker open");
+        assertFalse(entryAndSleepFor(resource, longWait));
+
+        sleep(1000);
+        for (int i = 0; i < 10; i++) {
+            entryAndSleepFor(resource, longWait);
+        }
+
+        System.out.println("after breaker recover failed");
+        assertFalse(entryAndSleepFor(resource, longWait));
+
+        sleep(1000);
+
+        for (int i = 0; i < 10; i++) {
+            assertTrue(entryAndSleepFor(resource, shortWait));
+        }
+
+        System.out.println("after breaker recover success");
+        assertTrue(entryAndSleepFor(resource, longWait));
 
     }
 }
