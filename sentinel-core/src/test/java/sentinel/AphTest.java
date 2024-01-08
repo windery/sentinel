@@ -1,16 +1,16 @@
 package sentinel;
 
-import cn.windery.sentinel.Aph;
 import cn.windery.sentinel.AphInitializer;
-import cn.windery.sentinel.Tracer;
-import cn.windery.sentinel.exception.BlockException;
 import cn.windery.sentinel.slots.FlowRuleManager;
 import cn.windery.sentinel.slots.flow.FlowRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AphTest {
+
+public class AphTest extends TimeBasedTest {
 
     @BeforeAll
     public static void setUp() {
@@ -22,25 +22,17 @@ public class AphTest {
 
     @Test
     public void entry() throws InterruptedException {
-        for (int i = 0; i < 1000; i++) {
-            try {
-                try {
-                    Aph.entry("test_resource");
-                    System.out.println("==========  main logic =========");
-                    if (i % 10 == 0) {
-                        throw new RuntimeException("qqq");
-                    }
-                } finally {
-                    Aph.exit("test_resource");
-                }
-            } catch (BlockException be) {
-                System.out.println("blocked...");
-            } catch (Exception e) {
-                Tracer.trace(e);
-            } finally {
-                Thread.sleep(10);
-            }
+
+        for (int i = 0; i < 70; i++) {
+            assertTrue(entryAndSleepFor("test_resource", 1));
         }
+
+        assertFalse(entryAndSleepFor("test_resource", 1));
+
+        Thread.sleep(1000);
+
+        assertTrue(entryAndSleepFor("test_resource", 1));
+
     }
 
     @Test
